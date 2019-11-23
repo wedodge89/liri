@@ -55,18 +55,21 @@ function spotifyFunc() {
             let songList = data.tracks.items
             for (i = 0; i < songList.length; i++){
               let song = songList[i]
-              console.log(
-                `
-                -------------
-                Artist: ${song.artists[0].name}
-                Title: ${song.name}
-                Album: ${song.album.name}`)
               if (song.preview_url !== null) {
-                console.log(`
-                Preview: ${song.preview_url}`)
+                console.log(
+                  `
+                  -------------
+                  Artist: ${song.artists[0].name}
+                  Title: ${song.name}
+                  Album: ${song.album.name}
+                  Preview: ${song.preview_url}`)
               } else {
                 console.log(`
-                Preview not available.`)
+                  --------------
+                  Artist: ${song.artists[0].name}
+                  Title: ${song.name}
+                  Album: ${song.album.name}
+                  Preview not available.`)
               }
             }
           }
