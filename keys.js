@@ -1,5 +1,9 @@
-console.log("this is loaded");
+console.log("Keys loaded.");
 exports.spotify = {
     id: process.env.SPOTIFY_ID,
     secret: process.env.SPOTIFY_SECRET
+}
+
+exports.omdb = {
+    key: "trilogy"
 }
