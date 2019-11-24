@@ -3,8 +3,7 @@ const keys = require("./keys.js");
 const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const inquirer = require("inquirer");
-
-// let spotify = new Spotify({spotify.keys})
+const moment = require("moment");
 
 inquirer 
   .prompt(
@@ -18,15 +17,12 @@ inquirer
   .then(function(answer) {
     switch (answer.api) {
       case "Song":
-        console.log("Spotify is working.");
         spotifyFunc();
         break;
       case "Movie":
-        console.log("Searching for movies...")
         omdbFunc();
         break;
       case "Concert":
-        console.log("Searching for concerts...")
         bandsFunc();
         break;
     }
@@ -117,4 +113,46 @@ function omdbFunc() {
             })
         }
       })
+}
+
+function bandsFunc() {
+  console.log("Activating Bands in Town Search...")
+  inquirer
+  .prompt(
+    {
+      type: "input",
+      message: "What artist are you looking for?",
+      name: "bandQuery"
+    })
+  .then(function(answer) {
+    let query = answer.bandQuery;
+    if (query === "") {
+      console.log("Please enter the name of an artist.")
+      bandsFunc()
+    } else {
+      console.log("Searching for concerts now...")
+      axios
+        .get("https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp")
+        .then(function(result) {
+          let concert = result.data
+          for (let i = 0; i < concert.length; i++) {
+            if (concert[i].venue.region !== "") {
+            console.log(`
+            -----------------
+            Venue: ${concert[i].venue.name}
+            Venue Location: ${concert[i].venue.city}, ${concert[i].venue.region}
+            Date/Time: ${moment(concert[i].datetime).format("MM/D/YYYY")}
+          `
+          )} else {
+            console.log(`
+            -----------------
+            Venue: ${concert[i].venue.name}
+            Venue Location: ${concert[i].venue.city}, ${concert[i].venue.country}
+            Date/Time: ${concert[i].datetime}
+          `)
+          }
+        }
+        })
+    }
+  })
 }
