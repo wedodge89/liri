@@ -4,14 +4,18 @@ const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const inquirer = require("inquirer");
 const moment = require("moment");
+const fs = require("fs")
 
-inquirer 
+startUp()
+
+function startUp() {
+  inquirer 
   .prompt(
     {
     message: "What are you looking for?",
     type: "list",
     name: "api",
-    choices: ["Song", "Movie", "Concert"]
+    choices: ["Song", "Movie", "Concert", "Surprise Me!"]
   }
 )
   .then(function(answer) {
@@ -25,8 +29,11 @@ inquirer
       case "Concert":
         bandsFunc();
         break;
+      case "Surprise Me!":
+        randFunc();
+        break;
     }
-  });
+  })};
 
 function spotifyFunc() {
   console.log("Activating Spotify search...")
@@ -76,7 +83,7 @@ function spotifyFunc() {
           }
           )}
     })
-}
+};
 
 function omdbFunc() {
   console.log("Activing OMDb search...")
@@ -113,7 +120,7 @@ function omdbFunc() {
             })
         }
       })
-}
+};
 
 function bandsFunc() {
   console.log("Activating Bands in Town Search...")
@@ -155,4 +162,9 @@ function bandsFunc() {
         })
     }
   })
+};
+
+function randFunc() {
+  console.log("Random choice, coming right up...")
+
 }
