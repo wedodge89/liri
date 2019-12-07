@@ -149,6 +149,7 @@ function bandsFunc () {
               if (concert[i].venue.region !== '') {
                 console.log(`
             -----------------
+            Performing: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.region}
             Date/Time: ${moment(concert[i].datetime).format('MM/D/YYYY')}
@@ -157,6 +158,7 @@ function bandsFunc () {
               } else {
                 console.log(`
             -----------------
+            Performing: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.country}
             Date/Time: ${concert[i].datetime}
@@ -257,7 +259,8 @@ function concertAPI () {
     if (err) throw err
     const randData = data.split(',')
     axios
-      .get('https://rest.bandsintown.com/artists/' + randData[1] + '/events?app_id=codingbootcamp').then(function (result) {
+      .get('https://rest.bandsintown.com/artists/' + randData[1] + '/events?app_id=codingbootcamp')
+      .then(function (result) {
         const concert = result.data
         for (let i = 0; i < concert.length; i++) {
           if (concert[i].venue.region !== '') {
