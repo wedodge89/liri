@@ -110,7 +110,7 @@ function omdbFunc () {
     })
 };
 
-function bandsFunc () {
+async function bandsFunc () {
   console.log('Activating Bands in Town Search...')
   inquirer
     .prompt(
@@ -153,48 +153,41 @@ function randFunc () {
 
 function spotifyAPI (query) {
   console.log("It's Spotify time!")
-  fs.readFile('./random.txt', 'utf8', (err, data) => {
-    if (err) throw err
-    console.log(data)
-    const spotify = new Spotify(keys.spotify)
-    spotify.search({ type: 'track', query: query, limit: 10 })
-      .then(function (result) {
-        console.log("Here's what we found:")
-        const songList = result.tracks.items
-        for (let i = 0; i < songList.length; i++) {
-          const song = songList[i]
-          if (song.preview_url !== null) {
-            console.log(
+  const spotify = new Spotify(keys.spotify)
+  spotify.search({ type: 'track', query: query, limit: 10 })
+    .then(function (result) {
+      console.log("Here's what we found:")
+      const songList = result.tracks.items
+      for (let i = 0; i < songList.length; i++) {
+        const song = songList[i]
+        if (song.preview_url !== null) {
+          console.log(
                   `
                   -------------
                   Artist: ${song.artists[0].name}
                   Title: ${song.name}
                   Album: ${song.album.name}
                   Preview: ${song.preview_url}`)
-          } else {
-            console.log(`
+        } else {
+          console.log(`
                   -------------------
                   Artist: ${song.artists[0].name}
                   Title: ${song.name}
                   Album: ${song.album.name}
                   Preview not available.`)
-          }
         }
       }
-      )
-  })
+    }
+    )
 }
 
 function movieAPI (query) {
   console.log("It's movie time!")
-  fs.readFile('./random.txt', 'utf8', (err, data) => {
-    if (err) throw err
-    console.log(data)
-    axios
-      .get('http://www.omdbapi.com/?apikey=trilogy&t=' + query)
-      .then(function (result) {
-        const movie = result.data
-        console.log(`
+  axios
+    .get('http://www.omdbapi.com/?apikey=trilogy&t=' + query)
+    .then(function (result) {
+      const movie = result.data
+      console.log(`
               ----------------
               Title: ${movie.Title}
               Year: ${movie.Year}
@@ -206,8 +199,7 @@ function movieAPI (query) {
               Plot: ${movie.Plot}
               -----------------
               `)
-      })
-  })
+    })
 }
 
 function concertAPI (query) {
