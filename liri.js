@@ -105,22 +105,7 @@ function omdbFunc () {
         console.log('Please enter the name of a movie.')
         omdbFunc()
       } else {
-        axios
-          .get('http://www.omdbapi.com/?apikey=trilogy&t=' + query)
-          .then(function (result) {
-            const movie = result.data
-            console.log(`
-              ----------------
-              Title: ${movie.Title}
-              Year: ${movie.Year}
-              IMDb Rating: ${movie.Ratings[0].Value}
-              RT Rating: ${movie.Ratings[1].Value}
-              Country: ${movie.Country}
-              Language: ${movie.Language}
-              Actors: ${movie.Actors}
-              Plot: ${movie.Plot}
-              `)
-          })
+        movieAPI(query)
       }
     })
 };
@@ -140,35 +125,11 @@ function bandsFunc () {
         console.log('Please enter the name of an artist.')
         bandsFunc()
       } else {
-        console.log('Searching for concerts now...')
-        axios
-          .get('https://rest.bandsintown.com/artists/' + query + '/events?app_id=codingbootcamp')
-          .then(function (result) {
-            const concert = result.data
-            for (let i = 0; i < concert.length; i++) {
-              if (concert[i].venue.region !== '') {
-                console.log(`
-            -----------------
-            Performing: ${concert[i].lineup}
-            Venue: ${concert[i].venue.name}
-            Venue Location: ${concert[i].venue.city}, ${concert[i].venue.region}
-            Date/Time: ${moment(concert[i].datetime).format('MM/D/YYYY')}
-          `
-                )
-              } else {
-                console.log(`
-            -----------------
-            Performing: ${concert[i].lineup}
-            Venue: ${concert[i].venue.name}
-            Venue Location: ${concert[i].venue.city}, ${concert[i].venue.country}
-            Date/Time: ${concert[i].datetime}
-          `)
-              }
-            }
-          })
+        concertAPI(query)
       }
-    })
-};
+    }
+    )
+}
 
 function randFunc () {
   console.log('Random choice, coming right up...')
@@ -177,27 +138,24 @@ function randFunc () {
     const randData = data.split(',')
     switch (randData[0]) {
       case 'spotify':
-        spotifyAPI()
+        spotifyAPI(randData[1])
         break
       case 'movie':
-        movieAPI()
+        movieAPI(randData[1])
         break
       case 'concert':
-        concertAPI()
+        concertAPI(randData[1].trim())
         break
     }
   }
   )
 };
 
-function spotifyAPI () {
+function spotifyAPI (query) {
   console.log("It's Spotify time!")
   fs.readFile('./random.txt', 'utf8', (err, data) => {
     if (err) throw err
     console.log(data)
-    const randData = data.split(',')
-    const query = randData[1]
-    console.log(query)
     const spotify = new Spotify(keys.spotify)
     spotify.search({ type: 'track', query: query, limit: 10 })
       .then(function (result) {
@@ -227,14 +185,13 @@ function spotifyAPI () {
   })
 }
 
-function movieAPI () {
+function movieAPI (query) {
   console.log("It's movie time!")
   fs.readFile('./random.txt', 'utf8', (err, data) => {
     if (err) throw err
     console.log(data)
-    const randData = data.split(',')
     axios
-      .get('http://www.omdbapi.com/?apikey=trilogy&t=' + randData[1])
+      .get('http://www.omdbapi.com/?apikey=trilogy&t=' + query)
       .then(function (result) {
         const movie = result.data
         console.log(`
@@ -253,35 +210,31 @@ function movieAPI () {
   })
 }
 
-function concertAPI () {
+function concertAPI (query) {
   console.log("It's concert time...time!")
-  fs.readFile('./random.txt', 'utf8', (err, data) => {
-    if (err) throw err
-    const randData = data.split(',')
-    axios
-      .get('https://rest.bandsintown.com/artists/' + randData[1] + '/events?app_id=codingbootcamp')
-      .then(function (result) {
-        const concert = result.data
-        for (let i = 0; i < concert.length; i++) {
-          if (concert[i].venue.region !== '') {
-            console.log(`
+  axios
+    .get('https://rest.bandsintown.com/artists/' + query + '/events?app_id=codingbootcamp')
+    .then(function (result) {
+      const concert = result.data
+      for (let i = 0; i < concert.length; i++) {
+        if (concert[i].venue.region !== '') {
+          console.log(`
             -----------------
             Lineup: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.region}
             Date/Time: ${moment(concert[i].datetime).format('MM/D/YYYY')}
           `
-            )
-          } else {
-            console.log(`
+          )
+        } else {
+          console.log(`
             -----------------
             Lineup: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.country}
             Date/Time: ${concert[i].datetime}
           `)
-          }
         }
-      })
-  })
+      }
+    })
 }
