@@ -266,6 +266,7 @@ function concertAPI () {
           if (concert[i].venue.region !== '') {
             console.log(`
             -----------------
+            Lineup: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.region}
             Date/Time: ${moment(concert[i].datetime).format('MM/D/YYYY')}
@@ -274,6 +275,7 @@ function concertAPI () {
           } else {
             console.log(`
             -----------------
+            Lineup: ${concert[i].lineup}
             Venue: ${concert[i].venue.name}
             Venue Location: ${concert[i].venue.city}, ${concert[i].venue.country}
             Date/Time: ${concert[i].datetime}
