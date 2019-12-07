@@ -189,5 +189,37 @@ function spotifyAPI() {
   console.log("It's Spotify time!")
   let query = randData[1];
   console.log(query)
+  const spotify = new Spotify(keys.spotify)
+        spotify.search ({type: "track", query: query, limit: 10})
+          .then(function(result) {
+            console.log("Here's what we found:")
+            let songList = result.tracks.items
+            for (i = 0; i < songList.length; i++){
+              let song = songList[i];
+              if (song.preview_url !== null) {
+                console.log(
+                  `
+                  -------------
+                  Artist: ${song.artists[0].name}
+                  Title: ${song.name}
+                  Album: ${song.album.name}
+                  Preview: ${song.preview_url}`)
+              } else {
+                console.log(`
+                  -------------------
+                  Artist: ${song.artists[0].name}
+                  Title: ${song.name}
+                  Album: ${song.album.name}
+                  Preview not available.`)
+              }
+            }
+          }
+          )};
+
+function movieAPI() {
+
+}
+
+function concertAPI() {
   
 }
