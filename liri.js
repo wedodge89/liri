@@ -166,5 +166,28 @@ function bandsFunc() {
 
 function randFunc() {
   console.log("Random choice, coming right up...")
+  fs.readFile("./random.txt", "utf8", (err, data) => {
+    if (err) throw err;
+    console.log(data);
+    randData = data.split(",")
+    console.log(randData)
+    switch (randData[0]) {
+      case "spotify":
+        spotifyAPI();
+        break;
+      case "movie":
+        movieAPI();
+        break;
+      case "concert":
+        concertAPI();
+        break;
+    }
+  }
+  )};
 
+function spotifyAPI() {
+  console.log("It's Spotify time!")
+  let query = randData[1];
+  console.log(query)
+  
 }
